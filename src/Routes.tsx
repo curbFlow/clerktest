@@ -110,7 +110,7 @@ const SignInView = () => {
   return (
     <Box mt="md">
       <Center>
-        <p>Version: 20</p>
+        <p>Version: 21</p>
         <SignIn
           path="/sign-in"
           routing="path"
