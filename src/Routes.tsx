@@ -1,19 +1,16 @@
-import { ClerkProvider, SignIn, SignUp, UserProfile } from "@clerk/clerk-react";
+import { ClerkProvider, SignIn, SignUp, useUser } from "@clerk/clerk-react";
 import {
+  Outlet,
   ReactLocation,
   Router,
-  Outlet,
   useNavigate,
 } from "@tanstack/react-location";
 import React, { useEffect } from "react";
 
 import { Box, Center } from "@mantine/core";
-import NotAuthorized from "./pages/NotAuthorized";
 import NotFound from "./pages/NotFound";
-import { useClerkUrls } from "./utils/useClerkUrls";
 import { Page1 } from "./pages/Page1";
-import { Page2 } from "./pages/Page2";
-import { useUserPermissions } from "./utils/useUserPermissions";
+import { useClerkUrls } from "./utils/useClerkUrls";
 
 const frontendApi = getFrontendApi();
 
@@ -45,24 +42,12 @@ export function Routes({ header }: Props) {
           ),
         },
         {
-          path: "/page2",
-          element: (
-            <RequireAuth>
-              <Page2 />
-            </RequireAuth>
-          ),
-        },
-        {
           path: "/sign-up",
           element: <SignUpView />,
         },
         {
           path: "/sign-in",
           element: <SignInView />,
-        },
-        {
-          path: "/user",
-          element: <UserProfileView />,
         },
         {
           path: "*",
@@ -79,7 +64,7 @@ export function Routes({ header }: Props) {
 }
 
 const RequireAuth = ({ children }: { children: React.ReactNode }) => {
-  const { isLoaded, isSignedIn } = useUserPermissions();
+  const { isLoaded, isSignedIn } = useUser();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -90,19 +75,9 @@ const RequireAuth = ({ children }: { children: React.ReactNode }) => {
   }, [isLoaded, isSignedIn, navigate]);
 
   if (isLoaded && isSignedIn) {
-    return <RequireRole>{children}</RequireRole>;
+    return <div>{children}</div>;
   } else {
     return null;
-  }
-};
-
-const RequireRole = ({ children }: { children: React.ReactNode }) => {
-  const { userHasRole } = useUserPermissions();
-
-  if (userHasRole) {
-    return <React.Fragment>{children}</React.Fragment>;
-  } else {
-    return <NotAuthorized />;
   }
 };
 
@@ -123,7 +98,7 @@ const ClerkAuthProvider = ({ children }: { children: React.ReactNode }) => {
 
 const SignInView = () => {
   const urls = useClerkUrls();
-  const { isLoaded, isSignedIn } = useUserPermissions();
+  const { isLoaded, isSignedIn } = useUser();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -131,11 +106,11 @@ const SignInView = () => {
       navigate({ to: "/" });
     }
   }, [isLoaded, isSignedIn, navigate]);
-  console.log("rendering sign in wit v1: ", urls);
 
   return (
     <Box mt="md">
       <Center>
+        <p>Version: 20</p>
         <SignIn
           path="/sign-in"
           routing="path"
@@ -161,13 +136,5 @@ const SignUpView = () => {
         />
       </Center>
     </Box>
-  );
-};
-
-const UserProfileView = () => {
-  return (
-    <RequireAuth>
-      <UserProfile />
-    </RequireAuth>
   );
 };
