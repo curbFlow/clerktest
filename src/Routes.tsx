@@ -131,7 +131,7 @@ const SignInView = () => {
       navigate({ to: "/" });
     }
   }, [isLoaded, isSignedIn, navigate]);
-  console.log("rendering sign in with: ", urls);
+  console.log("rendering sign in wit v1: ", urls);
 
   return (
     <Box mt="md">
