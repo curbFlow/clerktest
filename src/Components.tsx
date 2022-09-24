@@ -71,9 +71,11 @@ export const SignInView = () => {
     }
   }, [isLoaded, isSignedIn, navigate]);
 
+  console.log("redirect url is: ", redirectUrl);
+
   return (
     <div>
-      <p>Version 22</p>
+      <p>Version 23</p>
       <p>redirect url is: {redirectUrl}</p>
       <SignIn
         path="/sign-in"
