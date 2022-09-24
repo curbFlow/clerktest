@@ -1,12 +1,11 @@
-import { AppShell } from "@mantine/core";
-import { AppHeader } from "./AppHeader";
+import { AppHeader } from "./Components";
 import { Routes } from "./Routes";
 
 export function App() {
   return (
-    <AppShell padding="xl">
+    <div style={{ padding: 20 }}>
       <Routes header={<AppHeader />} />
-    </AppShell>
+    </div>
   );
 }
 

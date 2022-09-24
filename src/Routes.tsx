@@ -1,4 +1,4 @@
-import { ClerkProvider, SignIn, SignUp, useUser } from "@clerk/clerk-react";
+import { useUser } from "@clerk/clerk-react";
 import {
   Outlet,
   ReactLocation,
@@ -6,21 +6,7 @@ import {
   useNavigate,
 } from "@tanstack/react-location";
 import React, { useEffect } from "react";
-
-import { Box, Center } from "@mantine/core";
-import NotFound from "./pages/NotFound";
-import { Page1 } from "./pages/Page1";
-import { useClerkUrls } from "./utils/useClerkUrls";
-
-const frontendApi = getFrontendApi();
-
-function getFrontendApi() {
-  if (window.location.host.startsWith("localhost")) {
-    return "clerk.settled.grub-39.lcl.dev";
-  } else {
-    return "clerk.curbflow.com";
-  }
-}
+import { ClerkAuthProvider, SignInView, SignUpView } from "./Components";
 
 const location = new ReactLocation();
 
@@ -68,7 +54,6 @@ const RequireAuth = ({ children }: { children: React.ReactNode }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log("require auth effect: ", { isLoaded, isSignedIn });
     if (isLoaded && !isSignedIn) {
       navigate({ to: "/sign-in" });
     }
@@ -81,60 +66,14 @@ const RequireAuth = ({ children }: { children: React.ReactNode }) => {
   }
 };
 
-const ClerkAuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const navigate = useNavigate();
+function NotFound() {
   return (
-    <ClerkProvider
-      frontendApi={frontendApi}
-      navigate={(val) => {
-        console.log("custom navigate fn called with: ", val);
-        navigate({ to: val });
-      }}
-    >
-      {children}
-    </ClerkProvider>
+    <div>
+      <p>Page Not Found</p>
+    </div>
   );
-};
+}
 
-const SignInView = () => {
-  const urls = useClerkUrls();
-  const { isLoaded, isSignedIn } = useUser();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (isLoaded && isSignedIn) {
-      navigate({ to: "/" });
-    }
-  }, [isLoaded, isSignedIn, navigate]);
-
-  return (
-    <Box mt="md">
-      <Center>
-        <p>Version: 21</p>
-        <SignIn
-          path="/sign-in"
-          routing="path"
-          redirectUrl={urls.redirectUrl}
-          signUpUrl={urls.signUpUrl}
-        />
-      </Center>
-    </Box>
-  );
-};
-
-const SignUpView = () => {
-  const urls = useClerkUrls();
-  console.log("rendering sign up with: ", urls);
-  return (
-    <Box mt="md">
-      <Center>
-        <SignUp
-          path="/sign-up"
-          routing="path"
-          redirectUrl={urls.redirectUrl}
-          signInUrl={urls.signInUrl}
-        />
-      </Center>
-    </Box>
-  );
+const Page1 = () => {
+  return <h1>Page 1</h1>;
 };
