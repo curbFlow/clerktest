@@ -74,6 +74,7 @@ export const SignInView = () => {
   return (
     <div>
       <p>Version 22</p>
+      <p>redirect url is: {redirectUrl}</p>
       <SignIn
         path="/sign-in"
         routing="path"
@@ -87,6 +88,7 @@ export const SignInView = () => {
 export const SignUpView = () => {
   return (
     <div>
+      <p>redirect url is: {redirectUrl}</p>
       <SignUp
         path="/sign-up"
         routing="path"
